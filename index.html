@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The QR Generator</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero box">
+                <h2>The QR <br> Generator</h2>
+                <p class="hero">Transform any text, link, or information into a scannable QR code in just one click!  <br> Whether you're sharing a website, contact details, or Wi-Fi access, our QR generator makes it quick, easy, and hassle-free.  <br> No downloads, no sign-ups—just enter your text, generate, and share instantly! <br> Try it now and make sharing seamless.  </p>
+
+                <form class="hero">                    
+                    <div class="input">
+                        <input type="text" id="hero-input" placeholder="Input your text/url here...">
+                        <button id="generate-btn" type="button">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+                </form>
+                <div id="qr-image" class="hero">
+                    <img src="" id="qrImage">
+                </div> 
+            </div>
+        </div>
+        <footer>
+            <p class="foot">Copyright &copy; <span id="year"></span></p>
+        </footer>
+
+        <script src="index.js"></script>
+    </body>
+</html> 
