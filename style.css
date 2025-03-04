@@ -1,0 +1,125 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #e1eaf3;
+    color: #2d3e50;
+}
+
+body {
+    max-width: 960px;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+   
+}
+.container {
+    height: 80%;
+    padding: 20px;
+    overflow: overlay;
+}
+.hero {
+    padding: 0 10px;
+}
+h2 {
+    text-align: center;
+    font-weight: 300;
+    font-size: 40px;
+    margin: 10px 0;
+}
+p {    
+    letter-spacing: 1px;
+    line-height: 25px;
+    text-align: -webkit-center;
+}
+.box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;    
+}
+form {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+}
+input {    
+    outline: none;
+    border: none;
+}
+input::placeholder {
+    font-size: 12px;
+}
+.input {
+    border: 2px solid #BCCCDC;
+    padding: 7px;
+    border-radius: 12px;
+    box-shadow : 0px 0px 2px #82959a;
+}
+button {
+    border: none;
+}
+#qrImage {
+    width: fit-content;
+    height: fit-content;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 20px;
+    background-color: #fff;
+    display: none;
+}
+
+footer {
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.container::-webkit-scrollbar {
+    width: 7px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: #F8FAFC;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #445565; 
+    border-radius: 5px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #82959a;
+}
+
+@media (max-width: 768px) {
+    body {
+        max-width: 90%;
+        padding: 0 15px;
+    }
+}
+@media (max-width: 480px) {
+    * {
+        font-size: 12px;
+    }
+    p {
+        letter-spacing: .7px;
+        line-height: 20px;
+        text-align: -webkit-center;
+    }
+    h2 {
+        font-size: 30px;
+    }
+    body {
+        max-width: 95%; 
+        padding: 0 10px;
+    }
+    .container {
+        height: 100%;
+    }
+}
