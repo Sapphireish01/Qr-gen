@@ -4,67 +4,99 @@ const btn = document.querySelector('#generate-btn');
 const qrImage = document.querySelector('#qrImage');
 const foot = document.querySelector('.foot');
 const downloadBtn = document.querySelector('#downloadBtn');
-
+const yearElement = document.querySelector('#year');
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#year').textContent = new Date().getFullYear();
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
 });
 
-
-qrImage.onload = () => {
-    const isValidQR = qrImage.src && !qrImage.src.endsWith('/');
-    qrImage.style.display = isValidQR ? 'block' : 'none';
-    downloadBtn.style.display = isValidQR ? 'block' : 'none';
-};
-
+if (qrImage && downloadBtn) {
+    qrImage.onload = () => {
+        try {
+            const isValidQR = qrImage.src && !qrImage.src.endsWith('/');
+            qrImage.style.display = isValidQR ? 'block' : 'none';
+            downloadBtn.style.display = isValidQR ? 'block' : 'none';
+        } catch (error) {
+            console.error("Error displaying QR image:", error);
+        }
+    };
+}
 
 function getScreenWidth() {
-   const screen = window.innerWidth;
+    const screen = window.innerWidth;
 
-   if (screen <= 480){
-    return '150x150'
-   } else if (screen <= 768){
-    return '300x300'
-   } else {
-    return '350x350'
-   }
+    if (screen <= 480) {
+        return '150x150';
+    } else if (screen <= 768) {
+        return '300x300';
+    } else {
+        return '350x350';
+    }
 }
 
 function Generateqr() {
+    if (!input || !qrImage) {
+        console.error("Input or qrImage element is missing.");
+        return;
+    }
+
     if (!input.value.trim()) {
         alert("Please enter text to generate a QR code.");
         return;
     }
+
     let size = getScreenWidth();
     let qrText = encodeURIComponent(input.value);
     qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}&data=${qrText}`;
     input.value = '';
 }
 
-downloadBtn.addEventListener('click', async() => {
-    const response = await fetch(qrImage.src);
-    const blob = await response.blob();
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = "qrcode.jpg";
-    downloadLink.click();
-    URL.revokeObjectURL(ObjectURL)
-})
+if (downloadBtn) {
+    downloadBtn.addEventListener('click', async () => {
+        if (!qrImage || !qrImage.src) {
+            alert("No QR code available to download.");
+            return;
+        }
 
-input.addEventListener('input', () => {
-    qrImage.src = '';
-    qrImage.style.display = 'none';
-    downloadBtn.style.display = 'none';
-})
+        try {
+            const response = await fetch(qrImage.src);
+            if (!response.ok) throw new Error("Failed to fetch QR code.");
 
-btn.addEventListener('click', () => {
-   Generateqr()
-})
+            const blob = await response.blob();
+            const downloadLink = document.createElement('a');
+            const objectURL = URL.createObjectURL(blob);
 
-input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        event.preventDefault()
+            downloadLink.href = objectURL;
+            downloadLink.download = "qrcode.jpg";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            URL.revokeObjectURL(objectURL);
+        } catch (error) {
+            console.error("Error downloading QR code:", error);
+            alert("Failed to download QR code. Please try again.");
+        }
+    });
+}
+
+if (input && qrImage && downloadBtn) {
+    input.addEventListener('input', () => {
+        qrImage.src = '';
+        qrImage.style.display = 'none';
+        downloadBtn.style.display = 'none';
+    });
+
+    btn?.addEventListener('click', () => {
         Generateqr();
-    }
-})
-  
+    });
+
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            Generateqr();
+        }
+    });
+}
