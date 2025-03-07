@@ -62,6 +62,9 @@ input::placeholder {
 button {
     border: none;
 }
+#qr-image {
+    display: contents;
+}
 #qrImage {
     width: fit-content;
     height: fit-content;
@@ -69,9 +72,22 @@ button {
     padding: 10px;
     margin: 20px;
     background-color: #fff;
+    display: none;    
+}
+#downloadBtn {
+    border: 2px solid #445565;
+    background-color: #445565;
+    padding: 6px;
+    border-radius: 12px;
+    color: #dbe7f3;
     display: none;
 }
-
+#downloadBtn:hover {
+    color: #445565;
+    border: 2px solid #9aaabb;
+    background: none;
+    transition: 0.2s ease-in-out;
+}
 footer {
     padding: 15px 0;
     position: fixed;
