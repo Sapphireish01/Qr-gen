@@ -1,23 +1,23 @@
-const input = document.querySelector('#hero-input');
-const placeHolder = document.querySelector('#qr-image');
-const btn = document.querySelector('#generate-btn');
-const qrImage = document.querySelector('#qrImage');
-const foot = document.querySelector('.foot');
-const downloadBtn = document.querySelector('#downloadBtn');
-const yearElement = document.querySelector('#year');
+const input = document.querySelector("#hero-input");
+const qrImage = document.querySelector("#qrImage");
+const btn = document.querySelector("#generate-btn");
+const downloadBtn = document.querySelector("#downloadBtn");
+const historyCard = document.querySelector(".card");
+const yearElement = document.querySelector("#year");
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
+    loadHistory(); // Load previous QR code history on page load
 });
 
 if (qrImage && downloadBtn) {
     qrImage.onload = () => {
         try {
-            const isValidQR = qrImage.src && !qrImage.src.endsWith('/');
-            qrImage.style.display = isValidQR ? 'block' : 'none';
-            downloadBtn.style.display = isValidQR ? 'block' : 'none';
+            const isValidQR = qrImage.src && !qrImage.src.endsWith("/");
+            qrImage.style.display = isValidQR ? "block" : "none";
+            downloadBtn.style.display = isValidQR ? "block" : "none";
         } catch (error) {
             console.error("Error displaying QR image:", error);
         }
@@ -26,14 +26,9 @@ if (qrImage && downloadBtn) {
 
 function getScreenWidth() {
     const screen = window.innerWidth;
-
-    if (screen <= 480) {
-        return '150x150';
-    } else if (screen <= 768) {
-        return '300x300';
-    } else {
-        return '350x350';
-    }
+    if (screen <= 480) return "150x150";
+    if (screen <= 768) return "300x300";
+    return "350x350";
 }
 
 function Generateqr() {
@@ -49,12 +44,51 @@ function Generateqr() {
 
     let size = getScreenWidth();
     let qrText = encodeURIComponent(input.value);
-    qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}&data=${qrText}`;
-    input.value = '';
+    let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}&data=${qrText}`;
+    qrImage.src = qrUrl;
+
+    saveToHistory(input.value, qrUrl); // Save input text and QR URL
+    input.value = "";
+}
+
+function saveToHistory(text, qrUrl) {
+    let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+
+    history.push({ text, qrUrl });
+
+    localStorage.setItem("qrHistory", JSON.stringify(history));
+    displayHistory();
+}
+
+function loadHistory() {
+    let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+    history.forEach((item) => addHistoryItem(item.text, item.qrUrl));
+}
+
+function displayHistory() {
+    historyCard.innerHTML = ""; // Clear previous history
+    let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+    history.forEach((item) => addHistoryItem(item.text, item.qrUrl));
+}
+
+function addHistoryItem(text, qrUrl) {
+    const historyItem = document.createElement("div");
+    historyItem.classList.add("history-item");
+
+    const historyText = document.createElement("p");
+    historyText.textContent = text;
+
+    const historyImg = document.createElement("img");
+    historyImg.src = qrUrl;
+    historyImg.alt = "QR Code";
+
+    historyItem.appendChild(historyText);
+    historyItem.appendChild(historyImg);
+    historyCard.appendChild(historyItem);
 }
 
 if (downloadBtn) {
-    downloadBtn.addEventListener('click', async () => {
+    downloadBtn.addEventListener("click", async () => {
         if (!qrImage || !qrImage.src) {
             alert("No QR code available to download.");
             return;
@@ -65,7 +99,7 @@ if (downloadBtn) {
             if (!response.ok) throw new Error("Failed to fetch QR code.");
 
             const blob = await response.blob();
-            const downloadLink = document.createElement('a');
+            const downloadLink = document.createElement("a");
             const objectURL = URL.createObjectURL(blob);
 
             downloadLink.href = objectURL;
@@ -83,18 +117,18 @@ if (downloadBtn) {
 }
 
 if (input && qrImage && downloadBtn) {
-    input.addEventListener('input', () => {
-        qrImage.src = '';
-        qrImage.style.display = 'none';
-        downloadBtn.style.display = 'none';
+    input.addEventListener("input", () => {
+        qrImage.src = "";
+        qrImage.style.display = "none";
+        downloadBtn.style.display = "none";
     });
 
-    btn?.addEventListener('click', () => {
+    btn?.addEventListener("click", () => {
         Generateqr();
     });
 
-    input.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
             event.preventDefault();
             Generateqr();
         }
